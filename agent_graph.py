@@ -1,0 +1,24 @@
+from langgraph.graph import StateGraph, END
+from supervisor import supervisor
+from dispatcher import dispatcher_sync
+from synthesizer import synthesizer
+from models import AgentState
+
+
+workflow = StateGraph(AgentState)
+workflow.add_node("supervisor", supervisor)
+workflow.add_node("dispatcher", dispatcher_sync)
+workflow.add_node("synthesizer", synthesizer)
+workflow.set_entry_point("supervisor")
+workflow.add_conditional_edges("supervisor", lambda state: "dispatcher")
+workflow.add_conditional_edges("dispatcher", lambda state: "dispatcher" if state.agent_tasks and state.collab_count < 1 else "synthesizer")
+workflow.add_edge("synthesizer", END)
+app = workflow.compile()
+
+async def main():
+    state = AgentState(query="test query", responses=[], collab_count=0, agent_tasks=[], trace=[])
+    return await app.ainvoke(state)
+
+if __name__ == "__main__":
+    import asyncio
+    asyncio.run(main())

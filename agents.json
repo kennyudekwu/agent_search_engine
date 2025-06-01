@@ -1,0 +1,14 @@
+[
+    {
+        "id": "JenkinsAgent",
+        "domain": "CI/CD",
+        "endpoint": "http://localhost:5001/respond",
+        "keywords": ["pipeline", "CI/CD"]
+    },
+    {
+        "id": "DocsAgent",
+        "domain": "Documentation",
+        "endpoint": "http://localhost:5001/respond",
+        "keywords": ["compliance", "microservices"]
+    }
+]
