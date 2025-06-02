@@ -22,7 +22,4 @@ async def main():
 if __name__ == "__main__":
     import asyncio
     result = asyncio.run(main())
-    print("RESPONSE||||||||||||||||")
-    print(result["responses"][0])
-    print("Agent RESPONSES||||||||||||||||")
     print(result["responses"][0])
