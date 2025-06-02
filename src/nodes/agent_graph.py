@@ -1,8 +1,8 @@
 from langgraph.graph import StateGraph, END
-from supervisor import supervisor
+from src.nodes.supervisor import supervisor
 from dispatcher import dispatcher
 from synthesizer import synthesizer
-from models import AgentState
+from src.models.models import AgentState
 
 
 workflow = StateGraph(AgentState)

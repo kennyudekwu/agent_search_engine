@@ -1,9 +1,9 @@
 from fastapi import FastAPI, HTTPException
-from views import AgentMetadata, RegisterAgentRequest
+from src.views.views import AgentMetadata, RegisterAgentRequest
 from typing import List
 from pathlib import Path
 import json
-from models import AgentMetadata
+from src.models.models import AgentMetadata
 from qdrant_client.http import models as qmodels
 from sentence_transformers import SentenceTransformer
 from qdrant import init_qdrant, qdrant, get_agent_vector, COLLECTION_NAME

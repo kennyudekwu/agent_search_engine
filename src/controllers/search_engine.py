@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
-from agent_graph import app
-from models import AgentState
+from src.nodes.agent_graph import app
+from src.models.models import AgentState
 
 fastapi_app = FastAPI()
 

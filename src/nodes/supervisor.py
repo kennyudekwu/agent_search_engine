@@ -1,7 +1,7 @@
 from langchain.chat_models import ChatOpenAI
 from pydantic import RootModel
 import httpx, json, asyncio
-from models import AgentState, AgentTask, TraceEntry
+from src.models.models import AgentState, AgentTask, TraceEntry
 from langchain.chat_models import ChatOllama  # or ChatOpenAI, ChatLiteLLM, etc.
 from langchain.schema import (
     SystemMessage,
@@ -10,9 +10,9 @@ from langchain.schema import (
 )
 from qdrant import smart_match_agents
 from typing import List
-from models import AgentMetadata
+from src.models.models import AgentMetadata
 from fastapi import FastAPI
-from chat_model import RemoteChatAPI
+from src.controllers.chat_model import RemoteChatAPI
 from langchain.output_parsers import PydanticOutputParser
 
 class AgentTaskList(RootModel[List[AgentTask]]):

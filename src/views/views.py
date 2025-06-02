@@ -1,4 +1,4 @@
-from models import AgentMetadata
+from src.models.models import AgentMetadata
 
 class RegisterAgentRequest(AgentMetadata):
     pass
