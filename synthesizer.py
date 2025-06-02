@@ -5,16 +5,31 @@ from langchain.schema import (
     SystemMessage,
     HumanMessage
 )
-def synthesizer(state: AgentState) -> None:
+import asyncio
+
+async def synthesizer_async(state: AgentState) -> None:
     llm = RemoteChatAPI(endpoint_url="http://localhost:5001/respond")
-    prompt = f"""
-    You are a synthesis model that combines multiple agent responses into a coherent, accurate, and concise summary that directly addresses the original user query. 
-    Do not use any other information other than the ones contained here in 'Responses'
+    # prompt = f"""
+    # You are a synthesis model that combines multiple agent responses into a coherent, accurate, and concise summary that directly addresses the original user query. 
+    # Do not use any other information other than the ones contained here in 'Responses'
+    # """
+    prompt ="""
+    You are primarily a synthesis engine, secondarily a conversational assistant.
+
+    Your goal is to generate a rich, factual, coherent and structured summary based only on the content in 'Responses'.
+
+    - Avoid non-factual based generalizations.
+    - Treat the responses as knowledge to be aggregated and reported like a search engine would.
+    - Make sure your final output contains all the information contained in 'Responses'.
+    
+    Return the final output as a Markdown-formatted string.
+    Terminate the conversation after the final output, do not ask any questions.
     """
     system_prompt = SystemMessage(content=prompt)
     human_prompt = HumanMessage(content=f"User Query: {state.query}\nResponses: {state.responses}")
     try:
-        response = llm.invoke([system_prompt, human_prompt]).content
+        response = await llm.invoke([system_prompt, human_prompt])
+        response = response.content
     except Exception as e:
         response = "Failed to generate response"
         raise ValueError(response + f": {e}")
@@ -29,6 +44,9 @@ def synthesizer(state: AgentState) -> None:
         )
         state.responses = [response]
         return state
+    
+def synthesizer(state: AgentState) -> AgentState:
+    return asyncio.run(synthesizer_async(state))
 
 
 if __name__ == "__main__":

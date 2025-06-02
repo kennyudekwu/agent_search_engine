@@ -4,11 +4,11 @@ from models import AgentState, AgentTask, TraceEntry, AgentMetadata
 from typing import List
 
 async def call_agent(task: AgentTask):
-    async with httpx.AsyncClient(timeout=30.0) as client:
+    async with httpx.AsyncClient(timeout=60) as client:
         response = (await client.post(str(task.endpoint), json={"prompt": task.prompt})).json()
-        return response, task.agent_id
+        return response["response"], task.agent_id
 
-async def dispatcher(state: AgentState) -> AgentState:
+async def dispatcher_async(state: AgentState) -> AgentState:
     if not state.agent_tasks or state.collab_count >= 1:
         state.agent_tasks = []
         return state
@@ -16,12 +16,12 @@ async def dispatcher(state: AgentState) -> AgentState:
     tasks = [call_agent(task) for task in current_tasks]
     results = await asyncio.gather(*tasks)
     for result, agent_id in results:
-        state.responses.append(result["response"])
+        state.responses.append(result)
         state.trace.append(TraceEntry(
             step="dispatcher",
             action="called",
             collab_count=state.collab_count,
-            details={"agent": agent_id, "response": result["response"]}
+            details={"agent": agent_id, "response": result}
         ))
     state.agent_tasks = state.agent_tasks[len(current_tasks):]
     if state.agent_tasks:  # Collaboration round
@@ -34,8 +34,8 @@ async def dispatcher(state: AgentState) -> AgentState:
     ))
     return state
 
-def dispatcher_sync(state: AgentState) -> AgentState:
-    return asyncio.run(dispatcher(state))
+def dispatcher(state: AgentState) -> AgentState:
+    return asyncio.run(dispatcher_async(state))
 
 if __name__ == "__main__":
     import asyncio
@@ -59,4 +59,4 @@ if __name__ == "__main__":
         trace=[]
     )
 
-    print(dispatcher_sync(state))
+    print(dispatcher(state))

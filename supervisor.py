@@ -1,6 +1,6 @@
 from langchain.chat_models import ChatOpenAI
 from pydantic import RootModel
-import httpx, json
+import httpx, json, asyncio
 from models import AgentState, AgentTask, TraceEntry
 from langchain.chat_models import ChatOllama  # or ChatOpenAI, ChatLiteLLM, etc.
 from langchain.schema import (
@@ -20,7 +20,7 @@ class AgentTaskList(RootModel[List[AgentTask]]):
 
 parser = PydanticOutputParser(pydantic_object=AgentTaskList)
 
-async def supervisor(state: AgentState) -> AgentState:
+async def supervisor_async(state: AgentState) -> AgentState:
     llm = RemoteChatAPI(endpoint_url="http://localhost:5001/respond")
 
     registry: List[AgentMetadata] = smart_match_agents(state.query, top_k=50)
@@ -59,8 +59,8 @@ async def supervisor(state: AgentState) -> AgentState:
 
     human_prompt = HumanMessage(content=f"User Query: {state.query}\nAvailable Agents:\n{agent_registry_str}")
     try:
-        response = llm.invoke([system_prompt, human_prompt])
-        parsed = parser.parse(response.content)
+        response = await llm.invoke([system_prompt, human_prompt])
+        parsed = parser.parse(response.content) # likely to fail if llm fails to generate compatible response - will need retry logic or different way of mapping agent id to endpoint
         state.agent_tasks = parsed.root
     except Exception as e:
         # could consider retrying to get compatible response before failing
@@ -79,7 +79,9 @@ async def supervisor(state: AgentState) -> AgentState:
 
     return state
 
+def supervisor(state: AgentState) -> AgentState:
+    return asyncio.run(supervisor_async(state))
+
 if __name__ == "__main__":
-    import asyncio
     state = AgentState(query="test query", responses=[], collab_count=0, agent_tasks=[], trace=[])
-    print(asyncio.run(supervisor(state)))
+    print(supervisor(state))
