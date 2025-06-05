@@ -27,3 +27,12 @@ class AgentState(BaseModel):
     collab_count: int
     agent_tasks: List[AgentTask]
     trace: List[TraceEntry]
+
+class RegisterAgentRequest(AgentMetadata):
+    pass
+
+class PromptRequest(BaseModel):
+    prompt: str
+
+class PromptResponse(BaseModel):
+    response: str

@@ -1,6 +1,6 @@
 import asyncio
 import httpx
-from src.models.models import AgentState, AgentTask, TraceEntry, AgentMetadata
+from src.common.types import AgentState, AgentTask, TraceEntry, AgentMetadata
 from typing import List
 
 async def call_agent(task: AgentTask):

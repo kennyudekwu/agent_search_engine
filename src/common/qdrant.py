@@ -4,10 +4,10 @@ from qdrant_client.http import models as qmodels
 from typing import List
 from sentence_transformers import SentenceTransformer
 import json
-from src.repo.fallback import fallback_match_agents
-from src.models.models import ScoredAgent, AgentMetadata
+from .fallback import fallback_match_agents
+from src.common.types import ScoredAgent, AgentMetadata
 
-qdrant = QdrantClient("http://localhost:6333")  # Or cloud URL
+qdrant = QdrantClient("http://localhost:6333")
 model = SentenceTransformer("all-MiniLM-L6-v2")  # Small and fast
 COLLECTION_NAME = "agents"
 VECTOR_SIZE = 384

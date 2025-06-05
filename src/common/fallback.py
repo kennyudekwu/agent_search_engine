@@ -1,10 +1,12 @@
 import json
-from src.models.models import AgentMetadata, ScoredAgent
+from src.common.types import AgentMetadata, ScoredAgent
 from typing import List
 from rapidfuzz import fuzz
 from operator import itemgetter
+import os
+from pathlib import Path
 
-def fallback_match_agents(prompt: str, file_path: str = "../store/agents.json", top_k: int = 5) -> List[AgentMetadata]:
+def fallback_match_agents(prompt: str, file_path: str = os.path.join(Path(os.path.dirname(__file__)).parent, "store/agents.json"), top_k: int = 5) -> List[AgentMetadata]:
     with open(file_path, "r") as f:
         raw_agents = json.load(f)
 

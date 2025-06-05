@@ -1,6 +1,5 @@
-from typing import Any, Dict, List
-from src.models.models import AgentState, TraceEntry
-from src.controllers.chat_model import RemoteChatAPI
+from src.common.types import AgentState, TraceEntry
+from src.common.chat_model import RemoteChatAPI
 from langchain.schema import (
     SystemMessage,
     HumanMessage

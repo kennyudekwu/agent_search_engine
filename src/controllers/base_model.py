@@ -1,19 +1,12 @@
-from fastapi import FastAPI, Request
-from pydantic import BaseModel
-from typing import List
+from fastapi import FastAPI
 from langchain.chat_models import ChatOllama  # or ChatOpenAI, etc.
 from langchain.schema import HumanMessage, SystemMessage
+from common.types import PromptRequest, PromptResponse
 
 app = FastAPI()
 
 # Replace this with your actual local model wrapper
 llm = ChatOllama(model="llama3.2")
-
-class PromptRequest(BaseModel):
-    prompt: str
-
-class PromptResponse(BaseModel):
-    response: str
 
 @app.post("/respond", response_model=PromptResponse)
 async def respond(payload: PromptRequest):

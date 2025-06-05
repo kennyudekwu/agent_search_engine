@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
-from src.nodes.agent_graph import app
-from src.models.models import AgentState
+from .agent_graph import app
+from src.common.types import AgentState
 
 fastapi_app = FastAPI()
 
@@ -11,5 +11,4 @@ class SearchRequest(BaseModel):
 @fastapi_app.post("/search", response_model=AgentState)
 async def search(request: SearchRequest):
     state = AgentState(query=request.prompt, responses=[], collab_count=0, agent_tasks=[], trace=[])
-    result = await app.ainvoke(state)
-    return result
+    return await app.ainvoke(state)

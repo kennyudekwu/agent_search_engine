@@ -1,9 +1,8 @@
 from langgraph.graph import StateGraph, END
-from src.nodes.supervisor import supervisor
-from dispatcher import dispatcher
-from synthesizer import synthesizer
-from src.models.models import AgentState
-
+from .supervisor import supervisor
+from .dispatcher import dispatcher
+from .synthesizer import synthesizer
+from src.common.types import AgentState
 
 workflow = StateGraph(AgentState)
 workflow.add_node("supervisor", supervisor)

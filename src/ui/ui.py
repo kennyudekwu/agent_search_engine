@@ -25,7 +25,7 @@ async def ui():
     query = st.text_input("Enter query")
     if st.button("Search"):
         with httpx.AsyncClient() as client:
-            response = await client.post("http://localhost:8000/search", json={"query": query})
+            response = await client.post("http://localhost:5002/search", json={"query": query})
             state = AgentState(**response.json())
         st.write("**Response**")
         st.write(state.responses[0])

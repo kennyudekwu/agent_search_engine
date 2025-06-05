@@ -1,6 +1,6 @@
 from qdrant_client import QdrantClient
-from qdrant_client.http import models as qmodels
 from sentence_transformers import SentenceTransformer
+from typing import List, Dict
 
 model = SentenceTransformer("all-MiniLM-L6-v2")
 qdrant = QdrantClient("http://localhost:6333")
@@ -43,14 +43,3 @@ def craft_agent_prompts(original_prompt: str, agents: List[Dict]) -> Dict[str, s
         prompts[agent["id"]] = prompt
 
     return prompts
-
-# def craft_agent_prompts(original_prompt: str, agents: List[Dict]) -> Dict[str, str]:
-#     prompts = {}
-
-#     for agent in agents:
-#         prompts[agent["id"]] = generate_agent_prompt(agent)
-
-#     return prompts
-
-# def generate_agent_prompt(agent: Dict) -> str:
-#     pass
