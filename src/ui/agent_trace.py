@@ -88,6 +88,6 @@ def render_trace(trace: list):
     # Optional: show agent icon legend in sidebar
     with st.sidebar:
         if agent_ids:
-            st.markdown("### 🧾 Agent Icons")
+            st.markdown("### 🧾 Experts Consulted")
             for aid in sorted(agent_ids):
                 st.markdown(f"{get_agent_icon(aid)} `{aid}`")
